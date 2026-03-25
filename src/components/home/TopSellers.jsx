@@ -1,8 +1,9 @@
 import React from "react";
 import { Link } from "react-router-dom";
-import AuthorImage from "../../images/author_thumbnail.jpg";
+import Skeleton from "../UI/Skeleton";
 
-const TopSellers = () => {
+const TopSellers = ({ authors = [], loading = false }) => {
+  const skeletonItems = new Array(12).fill(0);
   return (
     <section id="section-popular" className="pb-5">
       <div className="container">
@@ -15,21 +16,33 @@ const TopSellers = () => {
           </div>
           <div className="col-md-12">
             <ol className="author_list">
-              {new Array(12).fill(0).map((_, index) => (
-                <li key={index}>
+              {(loading ? skeletonItems : authors).map((author, index) =>
+                loading ? (
+                  <li key={index}>
+                    <div className="author_list_pp">
+                      <Skeleton width="50px" height="50px" borderRadius="50%" />
+                    </div>
+                    <div className="author_list_info">
+                      <Skeleton width="110px" height="18px" borderRadius="6px" />
+                      <div style={{ height: "8px" }}></div>
+                      <Skeleton width="70px" height="16px" borderRadius="6px" />
+                    </div>
+                  </li>
+                ) : (
+                <li key={author.authorId}>
                   <div className="author_list_pp">
-                    <Link to="/author">
+                    <Link to={`/author/${author.authorId}`}>
                       <img
                         className="lazy pp-author"
-                        src={AuthorImage}
-                        alt=""
+                        src={author.authorImage}
+                        alt={author.title}
                       />
                       <i className="fa fa-check"></i>
                     </Link>
                   </div>
                   <div className="author_list_info">
-                    <Link to="/author">Monica Lucas</Link>
-                    <span>2.1 ETH</span>
+                    <Link to={`/author/${author.authorId}`}>{author.authorId}</Link>
+                    <span>{author.code} ETH</span>
                   </div>
                 </li>
               ))}

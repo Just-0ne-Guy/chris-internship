@@ -1,10 +1,27 @@
-import React, { useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import SubHeader from "../images/subheader.jpg";
 import ExploreItems from "../components/explore/ExploreItems";
+import { getHotCollections } from "../api/nfts";
 
 const Explore = () => {
+  const [nfts, setNfts] = useState([]);
+  const [loading, setLoading] = useState(true);
+
   useEffect(() => {
     window.scrollTo(0, 0);
+
+    async function loadNfts() {
+      try {
+        const data = await getHotCollections();
+        setNfts(data);
+      } catch (error) {
+        console.error(error);
+      } finally {
+        setLoading(false);
+      }
+    }
+
+    loadNfts();
   }, []);
 
   return (
@@ -32,7 +49,7 @@ const Explore = () => {
         <section aria-label="section">
           <div className="container">
             <div className="row">
-              <ExploreItems />
+              <ExploreItems items={nfts} loading={loading} />
             </div>
           </div>
         </section>
