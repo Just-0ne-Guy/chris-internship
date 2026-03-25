@@ -1,13 +1,37 @@
-import React, { useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import EthImage from "../images/ethereum.svg";
-import { Link } from "react-router-dom";
-import AuthorImage from "../images/author_thumbnail.jpg";
-import nftImage from "../images/nftImage.jpg";
+import { Link, useParams } from "react-router-dom";
+import { getHotCollections } from "../api/nfts";
+import Skeleton from "../components/UI/Skeleton";
 
 const ItemDetails = () => {
+  const { nftId } = useParams();
+  const [item, setItem] = useState(null);
+  const [loading, setLoading] = useState(true);
+
   useEffect(() => {
     window.scrollTo(0, 0);
-  }, []);
+
+    async function loadItem() {
+      try {
+        const data = await getHotCollections();
+        const foundItem = data.find(
+          (nft) => String(nft.nftId) === String(nftId),
+        );
+        setItem(foundItem || null);
+      } catch (error) {
+        console.error(error);
+      } finally {
+        setLoading(false);
+      }
+    }
+
+    loadItem();
+  }, [nftId]);
+
+  if (!loading && !item) {
+    return <div className="container py-5">item not found</div>;
+  }
 
   return (
     <div id="wrapper">
@@ -17,71 +41,101 @@ const ItemDetails = () => {
           <div className="container">
             <div className="row">
               <div className="col-md-6 text-center">
-                <img
-                  src={nftImage}
-                  className="img-fluid img-rounded mb-sm-30 nft-image"
-                  alt=""
-                />
+                {loading ? (
+                  <Skeleton width="100%" height="520px" borderRadius="12px" />
+                ) : (
+                  <img
+                    src={item.nftImage}
+                    className="img-fluid img-rounded mb-sm-30 nft-image"
+                    alt={item.title}
+                  />
+                )}
               </div>
               <div className="col-md-6">
-                <div className="item_info">
-                  <h2>Rainbow Style #194</h2>
+                {loading ? (
+                  <div className="item_info">
+                    <Skeleton width="220px" height="34px" borderRadius="8px" />
+                    <div style={{ height: "16px" }}></div>
 
-                  <div className="item_info_counts">
-                    <div className="item_info_views">
-                      <i className="fa fa-eye"></i>
-                      100
-                    </div>
-                    <div className="item_info_like">
-                      <i className="fa fa-heart"></i>
-                      74
-                    </div>
+                    <Skeleton width="120px" height="18px" borderRadius="8px" />
+                    <div style={{ height: "16px" }}></div>
+
+                    <Skeleton width="100%" height="60px" borderRadius="8px" />
+                    <div style={{ height: "24px" }}></div>
+
+                    <Skeleton width="180px" height="22px" borderRadius="8px" />
+                    <div style={{ height: "20px" }}></div>
+
+                    <Skeleton width="140px" height="32px" borderRadius="8px" />
                   </div>
-                  <p>
-                    doloremque laudantium, totam rem aperiam, eaque ipsa quae ab
-                    illo inventore veritatis et quasi architecto beatae vitae
-                    dicta sunt explicabo.
-                  </p>
-                  <div className="d-flex flex-row">
-                    <div className="mr40">
-                      <h6>Owner</h6>
-                      <div className="item_author">
-                        <div className="author_list_pp">
-                          <Link to="/author">
-                            <img className="lazy" src={AuthorImage} alt="" />
-                            <i className="fa fa-check"></i>
-                          </Link>
-                        </div>
-                        <div className="author_list_info">
-                          <Link to="/author">Monica Lucas</Link>
-                        </div>
+                ) : (
+                  <div className="item_info">
+                    <h2>{item.title}</h2>
+
+                    <div className="item_info_counts">
+                      <div className="item_info_views">
+                        <i className="fa fa-eye"></i>
+                        {item.id * 10}
+                      </div>
+                      <div className="item_info_like">
+                        <i className="fa fa-heart"></i>
+                        {item.id}
                       </div>
                     </div>
-                    <div></div>
-                  </div>
-                  <div className="de_tab tab_simple">
-                    <div className="de_tab_content">
-                      <h6>Creator</h6>
-                      <div className="item_author">
-                        <div className="author_list_pp">
-                          <Link to="/author">
-                            <img className="lazy" src={AuthorImage} alt="" />
-                            <i className="fa fa-check"></i>
-                          </Link>
-                        </div>
-                        <div className="author_list_info">
-                          <Link to="/author">Monica Lucas</Link>
+                    <p>token #{item.nftId} from the hot collections feed.</p>
+                    <div className="d-flex flex-row">
+                      <div className="mr40">
+                        <h6>Owner</h6>
+                        <div className="item_author">
+                          <div className="author_list_pp">
+                            <Link to={`/author/${item.authorId}`}>
+                              <img
+                                className="lazy"
+                                src={item.authorImage}
+                                alt={item.title}
+                              />
+                              <i className="fa fa-check"></i>
+                            </Link>
+                          </div>
+                          <div className="author_list_info">
+                            <Link to={`/author/${item.authorId}`}>
+                              {item.authorId}
+                            </Link>
+                          </div>
                         </div>
                       </div>
+                      <div></div>
                     </div>
-                    <div className="spacer-40"></div>
-                    <h6>Price</h6>
-                    <div className="nft-item-price">
-                      <img src={EthImage} alt="" />
-                      <span>1.85</span>
+                    <div className="de_tab tab_simple">
+                      <div className="de_tab_content">
+                        <h6>Creator</h6>
+                        <div className="item_author">
+                          <div className="author_list_pp">
+                            <Link to={`/author/${item.authorId}`}>
+                              <img
+                                className="lazy"
+                                src={item.authorImage}
+                                alt={item.title}
+                              />
+                              <i className="fa fa-check"></i>
+                            </Link>
+                          </div>
+                          <div className="author_list_info">
+                            <Link to={`/author/${item.authorId}`}>
+                              {item.authorId}
+                            </Link>
+                          </div>
+                        </div>
+                      </div>
+                      <div className="spacer-40"></div>
+                      <h6>Price</h6>
+                      <div className="nft-item-price">
+                        <img src={EthImage} alt="" />
+                        <span>{item.code}</span>
+                      </div>
                     </div>
                   </div>
-                </div>
+                )}
               </div>
             </div>
           </div>
