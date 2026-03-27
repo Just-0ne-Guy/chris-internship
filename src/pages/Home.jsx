@@ -5,32 +5,39 @@ import Landing from "../components/home/Landing";
 import LandingIntro from "../components/home/LandingIntro";
 import NewItems from "../components/home/NewItems";
 import TopSellers from "../components/home/TopSellers";
-import { getHotCollections } from "../api/nfts";
+import { getHotCollections, getNewItems } from "../api/nfts";
 
 const Home = () => {
-  const [nfts, setNfts] = useState([]);
+  const [hotCollections, setHotCollections] = useState([]);
+  const [newItems, setNewItems] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState("");
 
   useEffect(() => {
     window.scrollTo(0, 0);
 
-    async function loadNfts() {
+    async function loadHomeData() {
       try {
-        const data = await getHotCollections();
-        setNfts(data);
+        const [hotCollectionsData, newItemsData] = await Promise.all([
+          getHotCollections(),
+          getNewItems(),
+        ]);
+
+        setHotCollections(hotCollectionsData);
+        setNewItems(newItemsData);
       } catch (err) {
+        console.error(err);
         setError("could not load nft data");
       } finally {
         setLoading(false);
       }
     }
 
-    loadNfts();
+    loadHomeData();
   }, []);
 
   const uniqueAuthors = Array.from(
-    new Map(nfts.map((item) => [item.authorId, item])).values(),
+    new Map(hotCollections.map((item) => [item.authorId, item])).values()
   );
 
   return (
@@ -39,9 +46,11 @@ const Home = () => {
         <div id="top"></div>
         <Landing />
         <LandingIntro />
+
         {error && <p className="text-center mt-5">{error}</p>}
-        <HotCollections items={nfts} loading={loading} />
-        <NewItems items={nfts} loading={loading} />
+
+        <HotCollections items={hotCollections} loading={loading} />
+        <NewItems items={newItems} loading={loading} />
         <TopSellers authors={uniqueAuthors.slice(0, 12)} loading={loading} />
 
         <BrowseByCategory />

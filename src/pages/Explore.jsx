@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react";
 import SubHeader from "../images/subheader.jpg";
 import ExploreItems from "../components/explore/ExploreItems";
-import { getHotCollections } from "../api/nfts";
+import { getNewItems } from "../api/nfts";
 
 const Explore = () => {
   const [nfts, setNfts] = useState([]);
@@ -12,7 +12,7 @@ const Explore = () => {
 
     async function loadNfts() {
       try {
-        const data = await getHotCollections();
+        const data = await getNewItems();
         setNfts(data);
       } catch (error) {
         console.error(error);

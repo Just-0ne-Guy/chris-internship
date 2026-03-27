@@ -1,8 +1,8 @@
 import React, { useEffect, useState } from "react";
 import EthImage from "../images/ethereum.svg";
 import { Link, useParams } from "react-router-dom";
-import { getHotCollections } from "../api/nfts";
 import Skeleton from "../components/UI/Skeleton";
+import { getAllItems } from "../api/nfts";
 
 const ItemDetails = () => {
   const { nftId } = useParams();
@@ -14,7 +14,7 @@ const ItemDetails = () => {
 
     async function loadItem() {
       try {
-        const data = await getHotCollections();
+        const data = await getAllItems();
         const foundItem = data.find(
           (nft) => String(nft.nftId) === String(nftId),
         );
