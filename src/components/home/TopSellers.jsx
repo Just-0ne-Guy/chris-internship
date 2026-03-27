@@ -4,6 +4,7 @@ import Skeleton from "../UI/Skeleton";
 
 const TopSellers = ({ authors = [], loading = false }) => {
   const skeletonItems = new Array(12).fill(0);
+
   return (
     <section id="section-popular" className="pb-5">
       <div className="container">
@@ -14,6 +15,7 @@ const TopSellers = ({ authors = [], loading = false }) => {
               <div className="small-border bg-color-2"></div>
             </div>
           </div>
+
           <div className="col-md-12">
             <ol className="author_list">
               {(loading ? skeletonItems : authors).map((author, index) =>
@@ -29,23 +31,27 @@ const TopSellers = ({ authors = [], loading = false }) => {
                     </div>
                   </li>
                 ) : (
-                <li key={author.authorId}>
-                  <div className="author_list_pp">
-                    <Link to={`/author/${author.authorId}`}>
-                      <img
-                        className="lazy pp-author"
-                        src={author.authorImage}
-                        alt={author.title}
-                      />
-                      <i className="fa fa-check"></i>
-                    </Link>
-                  </div>
-                  <div className="author_list_info">
-                    <Link to={`/author/${author.authorId}`}>{author.authorId}</Link>
-                    <span>{author.code} ETH</span>
-                  </div>
-                </li>
-              ))}
+                  <li key={author.authorId}>
+                    <div className="author_list_pp">
+                      <Link to={`/author/${author.authorId}`}>
+                        <img
+                          className="lazy pp-author"
+                          src={author.authorImage}
+                          alt={author.title || author.authorId}
+                        />
+                        <i className="fa fa-check"></i>
+                      </Link>
+                    </div>
+
+                    <div className="author_list_info">
+                      <Link to={`/author/${author.authorId}`}>
+                        {author.authorName || author.authorId}
+                      </Link>
+                      <span>{author.price} ETH</span>
+                    </div>
+                  </li>
+                )
+              )}
             </ol>
           </div>
         </div>
