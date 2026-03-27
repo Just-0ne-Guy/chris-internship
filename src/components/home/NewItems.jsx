@@ -2,6 +2,7 @@ import React from "react";
 import { Link } from "react-router-dom";
 import OwlCarousel from "react-owl-carousel";
 import Skeleton from "../UI/Skeleton";
+import Countdown from "../UI/Countdown";
 
 const NewItems = ({ items = [], loading = false }) => {
   const displayItems = items.slice(0, 8);
@@ -123,7 +124,11 @@ const NewItems = ({ items = [], loading = false }) => {
                         </Link>
                       </div>
 
-                      <div className="de_countdown">5h 30m 32s</div>
+                      {item.expiryDate && (
+                        <Countdown
+                          expiresAt={new Date(item.expiryDate).getTime()}
+                        />
+                      )}
 
                       <div className="nft__item_wrap">
                         <div className="nft__item_extra">
@@ -158,9 +163,7 @@ const NewItems = ({ items = [], loading = false }) => {
                         <Link to={`/item-details/${item.nftId}`}>
                           <h4>{item.title}</h4>
                         </Link>
-                        <div className="nft__item_price">
-                          {item.code} ETH
-                        </div>
+                        <div className="nft__item_price">{item.code} ETH</div>
                         <div className="nft__item_like">
                           <i className="fa fa-heart"></i>
                           <span>{item.id}</span>

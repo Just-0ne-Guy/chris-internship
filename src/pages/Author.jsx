@@ -3,7 +3,7 @@ import AuthorBanner from "../images/author_banner.jpg";
 import AuthorItems from "../components/author/AuthorItems";
 import { Link, useParams } from "react-router-dom";
 import Skeleton from "../components/UI/Skeleton";
-import { getHotCollections } from "../api/nfts";
+import { getAllItems } from "../api/nfts";
 
 const Author = () => {
   const { authorId } = useParams();
@@ -13,7 +13,7 @@ const Author = () => {
   useEffect(() => {
     async function loadAuthor() {
       try {
-        const data = await getHotCollections();
+        const data = await getAllItems();
         const filtered = data.filter(
           (item) => String(item.authorId) === String(authorId)
         );
