@@ -25,10 +25,11 @@ export async function getTopSellers() {
 }
 
 export async function getAllItems() {
-  const [hotCollections, newItems] = await Promise.all([
+  const [hotCollections, newItems, topSellers] = await Promise.all([
     getHotCollections(),
     getNewItems(),
+    getTopSellers(),
   ]);
 
-  return [...hotCollections, ...newItems];
+  return [...hotCollections, ...newItems, ...topSellers];
 }
