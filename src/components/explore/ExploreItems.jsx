@@ -1,23 +1,48 @@
-import React from "react";
+import React, { useEffect, useMemo, useState } from "react";
 import { Link } from "react-router-dom";
 import Skeleton from "../UI/Skeleton";
 import Countdown from "../UI/Countdown";
 
-const ExploreItems = ({ items = [], loading = false }) => {
-  const skeletonItems = new Array(8).fill(0);
+const INITIAL_VISIBLE_COUNT = 8;
+const LOAD_MORE_COUNT = 4;
+
+const ExploreItems = ({
+  items = [],
+  loading = false,
+  filter = "",
+  setFilter,
+}) => {
+  const [visibleCount, setVisibleCount] = useState(INITIAL_VISIBLE_COUNT);
+
+  const skeletonItems = useMemo(() => new Array(8).fill(0), []);
+
+  const visibleItems = items.slice(0, visibleCount);
+  const hasMoreItems = visibleCount < items.length;
+
+  useEffect(() => {
+    setVisibleCount(INITIAL_VISIBLE_COUNT);
+  }, [items]);
+
+  const handleLoadMore = () => {
+    setVisibleCount((prev) => prev + LOAD_MORE_COUNT);
+  };
 
   return (
     <>
       <div>
-        <select id="filter-items" defaultValue="">
+        <select
+          id="filter-items"
+          value={filter}
+          onChange={(e) => setFilter(e.target.value)}
+        >
           <option value="">Default</option>
           <option value="price_low_to_high">Price, Low to High</option>
           <option value="price_high_to_low">Price, High to Low</option>
-          <option value="likes_high_to_low">Most liked</option>
+          <option value="likes_high_to_low">Most Liked</option>
         </select>
       </div>
 
-      {(loading ? skeletonItems : items).map((item, index) => (
+      {(loading ? skeletonItems : visibleItems).map((item, index) => (
         <div
           key={loading ? index : item.id}
           className="d-item col-lg-3 col-md-6 col-sm-6 col-xs-12"
@@ -62,9 +87,9 @@ const ExploreItems = ({ items = [], loading = false }) => {
                 </Link>
               </div>
 
-              {item.expiryDate && (
-  <Countdown expiresAt={new Date(item.expiryDate).getTime()} />
-)}
+              {item.expiryDate != null && item.expiryDate !== "" && (
+                <Countdown expiresAt={new Date(item.expiryDate).getTime()} />
+              )}
 
               <div className="nft__item_wrap">
                 <div className="nft__item_extra">
@@ -99,11 +124,11 @@ const ExploreItems = ({ items = [], loading = false }) => {
                   <h4>{item.title}</h4>
                 </Link>
                 <div className="nft__item_price">
-                  {Number(item.code).toFixed(2)} ETH
+                  {item.price} ETH
                 </div>
                 <div className="nft__item_like">
                   <i className="fa fa-heart"></i>
-                  <span>{item.id}</span>
+                  <span>{item.likes}</span>
                 </div>
               </div>
             </div>
@@ -111,11 +136,18 @@ const ExploreItems = ({ items = [], loading = false }) => {
         </div>
       ))}
 
-      <div className="col-md-12 text-center">
-        <Link to="" id="loadmore" className="btn-main lead">
-          Load more
-        </Link>
-      </div>
+      {!loading && hasMoreItems && (
+        <div className="col-md-12 text-center">
+          <button
+            type="button"
+            id="loadmore"
+            className="btn-main lead"
+            onClick={handleLoadMore}
+          >
+            Load more
+          </button>
+        </div>
+      )}
     </>
   );
 };
