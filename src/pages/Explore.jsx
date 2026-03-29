@@ -1,19 +1,21 @@
 import React, { useEffect, useState } from "react";
 import SubHeader from "../images/subheader.jpg";
 import ExploreItems from "../components/explore/ExploreItems";
-import { getNewItems } from "../api/nfts";
+import { getExploreItems } from "../api/nfts";
 
 const Explore = () => {
-  const [nfts, setNfts] = useState([]);
+  const [items, setItems] = useState([]);
   const [loading, setLoading] = useState(true);
+  const [filter, setFilter] = useState("");
 
   useEffect(() => {
     window.scrollTo(0, 0);
 
-    async function loadNfts() {
+    async function loadItems() {
       try {
-        const data = await getNewItems();
-        setNfts(data);
+        setLoading(true);
+        const data = await getExploreItems(filter);
+        setItems(data);
       } catch (error) {
         console.error(error);
       } finally {
@@ -21,8 +23,8 @@ const Explore = () => {
       }
     }
 
-    loadNfts();
-  }, []);
+    loadItems();
+  }, [filter]);
 
   return (
     <div id="wrapper">
@@ -40,7 +42,6 @@ const Explore = () => {
                 <div className="col-md-12 text-center">
                   <h1>Explore</h1>
                 </div>
-                <div className="clearfix"></div>
               </div>
             </div>
           </div>
@@ -49,7 +50,12 @@ const Explore = () => {
         <section aria-label="section">
           <div className="container">
             <div className="row">
-              <ExploreItems items={nfts} loading={loading} />
+              <ExploreItems
+                items={items}
+                loading={loading}
+                filter={filter}
+                setFilter={setFilter}
+              />
             </div>
           </div>
         </section>
