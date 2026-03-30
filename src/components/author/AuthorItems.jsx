@@ -78,11 +78,11 @@ const AuthorItems = ({ items = [], loading = false }) => {
                       <h4>{item.title}</h4>
                     </Link>
                     <div className="nft__item_price">
-                      {item.price} ETH
+                      {Number(item.price ?? item.code ?? 0).toFixed(2)} ETH
                     </div>
                     <div className="nft__item_like">
                       <i className="fa fa-heart"></i>
-                      <span>{item.likes}</span>
+                      <span>{item.likes ?? 0}</span>
                     </div>
                   </div>
                 </div>
