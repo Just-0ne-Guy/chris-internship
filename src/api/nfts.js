@@ -9,9 +9,19 @@ const NEW_ITEMS_URL =
 const TOP_SELLERS_URL =
   "https://us-central1-nft-cloud-functions.cloudfunctions.net/topSellers";
 
-  const EXPLORE_URL =
+const EXPLORE_URL =
   "https://us-central1-nft-cloud-functions.cloudfunctions.net/explore";
 
+export async function getAuthor(authorId) {
+  const response = await axios.get(
+    "https://us-central1-nft-cloud-functions.cloudfunctions.net/authors",
+    {
+      params: { author: authorId },
+    },
+  );
+
+  return response.data;
+}
 
 export async function getHotCollections() {
   const response = await axios.get(HOT_COLLECTIONS_URL);
@@ -41,6 +51,7 @@ export async function getAllItems() {
     getHotCollections(),
     getNewItems(),
     getTopSellers(),
+    getAuthor(),
   ]);
 
   return [...hotCollections, ...newItems, ...topSellers];
