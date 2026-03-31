@@ -22,7 +22,16 @@ export async function getAuthor(authorId) {
 
   return response.data;
 }
+export async function getItemDetails(nftId) {
+  const response = await axios.get(
+    "https://us-central1-nft-cloud-functions.cloudfunctions.net/itemDetails",
+    {
+      params: { nftId },
+    },
+  );
 
+  return response.data;
+}
 export async function getHotCollections() {
   const response = await axios.get(HOT_COLLECTIONS_URL);
   return response.data;
