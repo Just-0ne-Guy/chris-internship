@@ -33,20 +33,25 @@ const HotCollections = ({ items = [], loading = false }) => {
       <div className="container">
         <div className="row">
           <div className="col-lg-12">
-            <div className="text-center">
+            <div className="text-center" data-aos="fade-up">
               <h2>Hot Collections</h2>
               <div className="small-border bg-color-2"></div>
             </div>
           </div>
 
-          <div className="col-lg-12">
+          <div className="col-lg-12" data-aos="fade-up" data-aos-delay="100">
             <OwlCarousel
               key={loading ? "loading" : `loaded-${hotCollectionItems.length}`}
               className="owl-theme hot-collections-carousel"
               {...options}
             >
               {displayItems.map((item, index) => (
-                <div className="item" key={loading ? index : item.id}>
+                <div
+                  className="item"
+                  key={loading ? index : item.id}
+                  data-aos="fade-up"
+                  data-aos-delay={index * 100}
+                >
                   {loading ? (
                     <div className="nft_coll">
                       <div className="nft_wrap">

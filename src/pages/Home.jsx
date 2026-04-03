@@ -10,6 +10,7 @@ import {
   getNewItems,
   getTopSellers,
 } from "../api/nfts";
+import AOS from "aos";
 
 const Home = () => {
   const [hotCollections, setHotCollections] = useState([]);
@@ -38,6 +39,7 @@ const Home = () => {
         setError("could not load nft data");
       } finally {
         setLoading(false);
+        AOS.refresh();
       }
     }
 

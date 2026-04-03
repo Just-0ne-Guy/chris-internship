@@ -10,17 +10,17 @@ const TopSellers = ({ authors = [], loading = false }) => {
       <div className="container">
         <div className="row">
           <div className="col-lg-12">
-            <div className="text-center">
+            <div className="text-center" data-aos="fade-up">
               <h2>Top Sellers</h2>
               <div className="small-border bg-color-2"></div>
             </div>
           </div>
 
-          <div className="col-md-12">
+          <div className="col-md-12" data-aos="fade-up" data-aos-delay="100">
             <ol className="author_list">
               {(loading ? skeletonItems : authors).map((author, index) =>
                 loading ? (
-                  <li key={index}>
+                  <li key={index} data-aos="fade-up" data-aos-delay={index * 60}>
                     <div className="author_list_pp">
                       <Skeleton width="50px" height="50px" borderRadius="50%" />
                     </div>
@@ -31,7 +31,11 @@ const TopSellers = ({ authors = [], loading = false }) => {
                     </div>
                   </li>
                 ) : (
-                  <li key={author.authorId}>
+                  <li
+                    key={author.authorId}
+                    data-aos="fade-up"
+                    data-aos-delay={index * 60}
+                  >
                     <div className="author_list_pp">
                       <Link to={`/author/${author.authorId}`}>
                         <img
