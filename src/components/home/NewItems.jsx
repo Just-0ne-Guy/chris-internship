@@ -16,18 +16,10 @@ const NewItems = ({ items = [], loading = false }) => {
     autoplay: false,
     smartSpeed: 600,
     responsive: {
-      0: {
-        items: 1,
-      },
-      576: {
-        items: 2,
-      },
-      992: {
-        items: 3,
-      },
-      1200: {
-        items: 4,
-      },
+      0: { items: 1 },
+      576: { items: 2 },
+      992: { items: 3 },
+      1200: { items: 4 },
     },
     navText: [
       '<span class="prev">&#10094;</span>',
@@ -42,13 +34,13 @@ const NewItems = ({ items = [], loading = false }) => {
       <div className="container">
         <div className="row">
           <div className="col-lg-12">
-            <div className="text-center">
+            <div className="text-center" data-aos="fade-up">
               <h2>New Items</h2>
               <div className="small-border bg-color-2"></div>
             </div>
           </div>
 
-          <div className="col-lg-12">
+          <div className="col-lg-12" data-aos="fade-up" data-aos-delay="100">
             <OwlCarousel
               key={
                 loading
@@ -59,7 +51,12 @@ const NewItems = ({ items = [], loading = false }) => {
               {...options}
             >
               {carouselItems.map((item, index) => (
-                <div className="item" key={loading ? index : item.id}>
+                <div
+                  className="item"
+                  key={loading ? index : item.id}
+                  data-aos="fade-up"
+                  data-aos-delay={index * 100}
+                >
                   {loading ? (
                     <div className="nft__item">
                       <div className="author_list_pp">
